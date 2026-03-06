@@ -7,11 +7,13 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'fakestoreapi.com',
         port: '',
-        pathname: '/img/**',
+        pathname: '/**',
       },
     ],
     unoptimized: true,
   },
+  output: 'export', // Add this
+  trailingSlash: true,
 };
 
 export default nextConfig;
