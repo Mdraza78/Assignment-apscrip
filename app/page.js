@@ -2,32 +2,30 @@ import MainShop from "../components/MainShop";
 
 async function getProducts() {
   try {
-    // Add a longer timeout and better error handling
-    const res = await fetch("https://fakestoreapi.com/products", {
-      next: { revalidate: 3600 },
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
+    console.log("🟡 Fetching products...");
+    
+    // Simple fetch without complex options
+    const res = await fetch("https://fakestoreapi.com/products");
     
     if (!res.ok) {
-      console.error(`API responded with status: ${res.status}`);
+      console.error("🔴 API Error:", res.status);
       return [];
     }
     
     const data = await res.json();
-    console.log("Products fetched:", data.length);
+    console.log("🟢 Success:", data.length, "products");
     return data;
   } catch (error) {
-    console.error('Fetch error:', error.message);
-    return []; // Return empty array to prevent crash
+    console.error("🔴 Fetch failed:", error.message);
+    return [];
   }
 }
 
 export default async function Home() {
   const products = await getProducts();
   
-  console.log("Home component - products:", products?.length || 0);
+  // Show count even if 0 for debugging
+  console.log("📦 Products in Home:", products?.length);
 
   return (
     <main className="page-wrapper">
@@ -37,7 +35,12 @@ export default async function Home() {
         <div className="header-container">
           <section className="hero-section">
             <h1>DISCOVER OUR PRODUCTS</h1>
-            <p>Loading products...</p>
+            <p style={{color: '#666'}}>
+              {products?.length === 0 ? 'No products found' : 'Loading products...'}
+            </p>
+            <p style={{fontSize: '12px', color: '#999', marginTop: '20px'}}>
+              Debug: Products array is {products?.length === 0 ? 'empty' : 'loading'}
+            </p>
           </section>
         </div>
       )}
