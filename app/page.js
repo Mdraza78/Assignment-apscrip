@@ -4,17 +4,35 @@ async function getProducts() {
   try {
     console.log("🟡 Fetching products...");
     
-    // Simple fetch without complex options
-    const res = await fetch("https://fakestoreapi.com/products");
+    // Add full URL and headers
+    const res = await fetch("https://fakestoreapi.com/products", {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; Vercel/1.0)',
+        'Accept': 'application/json',
+      },
+      // Add cache control
+      cache: 'no-store'
+    });
+    
+    console.log("🟡 Response status:", res.status);
     
     if (!res.ok) {
       console.error("🔴 API Error:", res.status);
       return [];
     }
     
-    const data = await res.json();
-    console.log("🟢 Success:", data.length, "products");
-    return data;
+    const text = await res.text(); // Get as text first to debug
+    console.log("🟡 Response text length:", text.length);
+    
+    try {
+      const data = JSON.parse(text);
+      console.log("🟢 Success:", data.length, "products");
+      return data;
+    } catch (e) {
+      console.error("🔴 JSON Parse Error:", e.message);
+      console.error("🔴 First 100 chars:", text.substring(0, 100));
+      return [];
+    }
   } catch (error) {
     console.error("🔴 Fetch failed:", error.message);
     return [];
@@ -24,8 +42,7 @@ async function getProducts() {
 export default async function Home() {
   const products = await getProducts();
   
-  // Show count even if 0 for debugging
-  console.log("📦 Products in Home:", products?.length);
+  console.log("📦 Final products count:", products?.length);
 
   return (
     <main className="page-wrapper">
@@ -35,11 +52,9 @@ export default async function Home() {
         <div className="header-container">
           <section className="hero-section">
             <h1>DISCOVER OUR PRODUCTS</h1>
-            <p style={{color: '#666'}}>
-              {products?.length === 0 ? 'No products found' : 'Loading products...'}
-            </p>
-            <p style={{fontSize: '12px', color: '#999', marginTop: '20px'}}>
-              Debug: Products array is {products?.length === 0 ? 'empty' : 'loading'}
+            <p>No products found</p>
+            <p style={{fontSize: '12px', color: '#999'}}>
+              Debug: Products array is empty
             </p>
           </section>
         </div>
