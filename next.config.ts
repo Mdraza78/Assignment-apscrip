@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true,
   },
-  output: 'export',
+  // Remove output: 'export'
   trailingSlash: true,
 };
 

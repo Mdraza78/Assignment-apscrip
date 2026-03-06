@@ -1,8 +1,14 @@
 [build]
   command = "npm run build"
-  publish = "out"  # Changed from .next to out
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
 
-# Remove the plugin and redirects - they're not needed for static export
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/next-server"
+  status = 200
