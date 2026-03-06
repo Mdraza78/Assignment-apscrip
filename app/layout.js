@@ -2,7 +2,6 @@ import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-// Requirement 6a & 6b: SEO settings
 export const metadata = {
   title: "Discover Our Products | Appscrip Task",
   description: "Explore our wide range of premium products curated for you.",
