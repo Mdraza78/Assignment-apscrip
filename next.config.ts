@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
       },
     ],
     unoptimized: true,
-  },
+  },//optimize
   output: 'export', 
 };
 
