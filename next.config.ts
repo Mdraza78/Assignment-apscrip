@@ -12,8 +12,7 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true,
   },
-  // Remove output: 'export'
-  trailingSlash: true,
+  // No output: 'export' - this is SSR
 };
 
 export default nextConfig;
