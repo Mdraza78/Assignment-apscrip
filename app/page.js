@@ -1,36 +1,45 @@
 import MainShop from "../components/MainShop";
 
-/**
- * Server-side function to fetch products from the API.
- * This keeps the API key/URL logic on the server.
- */
 async function getProducts() {
   try {
+    console.log("Fetching products from API...");
     const res = await fetch("https://fakestoreapi.com/products", {
-      // Optional: Revalidate every hour to keep data fresh
-      next: { revalidate: 3600 } 
+      next: { revalidate: 3600 },
+      
+      cache: 'no-store'
     });
     
     if (!res.ok) {
-      throw new Error("Failed to fetch products from Fake Store API");
+      console.error("API response not OK:", res.status);
+      return [];
     }
     
-    return res.json();
+    const data = await res.json();
+    console.log("Products fetched:", data.length);
+    return data;
   } catch (error) {
     console.error("Fetch error:", error);
-    return []; // Return empty array to prevent app crash
+    return [];
   }
 }
 
 export default async function Home() {
   const products = await getProducts();
+  
+  console.log("Home component - products:", products?.length || 0);
 
   return (
     <main className="page-wrapper">
-      {/* We pass the products directly to MainShop. 
-        MainShop handles the Hero Section, Filters, and the Grid.
-      */}
-      <MainShop products={products} />
+      {products && products.length > 0 ? (
+        <MainShop products={products} />
+      ) : (
+        <div className="header-container">
+          <section className="hero-section">
+            <h1>DISCOVER OUR PRODUCTS</h1>
+            <p>No products found. Please check back later.</p>
+          </section>
+        </div>
+      )}
     </main>
   );
 }
